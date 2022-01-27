@@ -2,7 +2,7 @@
 
 En este ejemplo podemos ejecutar localmente Serveless Framework, usando <a href="https://github.com/dherault/serverless-offline">serverless-offline plugin</a>. Implementando una REST API para realizar peticiones GET a la API pública de STAR WARS SWAPI traduciendo los atributos, para finalmente almacenarlo en MySql.
 
-# Instalacion de modulos
+# Instalación de módulos
 npm install
 
 # Requerimientos
