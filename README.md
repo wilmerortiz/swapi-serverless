@@ -69,7 +69,7 @@ CREATE DATABASE swapi;
 | api/films | crear un un registro | Lista todos los registros creados junto con algunos registros obtenidos de la api <a href="https://swapi.py4e.com/documentation">swapi</a> |
 | api/films/id | --- | Se obtiene un registro pasando por parámetro un id, Según el id se obtendrá el registro de la base de datos o de la api SWAPI |
  
-- Ejemplo para crear un registro por method post
+- Ejemplo para crear un registro por method post (Puede usar las herramientas de Postman o Insomnia)
 ```json
  {
     "title": "A New Hope", 
@@ -139,7 +139,7 @@ CREATE DATABASE swapi;
 | api/peoples | crear un un registro | Lista todos los registros creados junto con algunos registros obtenidos de la api <a href="https://swapi.py4e.com/documentation">swapi</a> |
 | api/peoples/id | --- | Se obtiene un registro pasando por parámetro un id, Según el id se obtendrá el registro de la base de datos o de la api SWAPI |
 
-- Ejemplo para crear un registro por method post
+- Ejemplo para crear un registro por method post (Puede usar las herramientas de Postman o Insomnia)
 
 ```json
  {
