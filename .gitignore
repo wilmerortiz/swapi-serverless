@@ -1,0 +1,11 @@
+.serverless
+node_modules
+.dynamodb
+serverless - copia.yml
+secrets.json
+db.config.js
+db.js
+.idea
+.gitignore
+.npmignore
+.webpack

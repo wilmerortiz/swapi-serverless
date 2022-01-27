@@ -1,0 +1,116 @@
+service: swapi-serverless
+custom:
+  secrets: ${file(secrets.json)}
+  serverless-offline:
+    port: 4000
+
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  variablesResolutionMode: '20210326'
+  lambdaHashingVersion: '20201221'
+  region: us-east-1
+  timeout: 30
+  stage: ${self:custom.secrets.NODE_ENV}
+  environment:
+    NODE_ENV: ${self:custom.secrets.NODE_ENV}
+    DB_NAME: ${self:custom.secrets.DB_NAME}
+    DB_USER: ${self:custom.secrets.DB_USER}
+    DB_PASSWORD: ${self:custom.secrets.DB_PASSWORD}
+    DB_HOST: ${self:custom.secrets.DB_HOST}
+    DB_PORT: ${self:custom.secrets.DB_PORT}
+  vpc:
+    securityGroupIds:
+      - ${self:custom.secrets.SECURITY_GROUP_ID}
+    subnetIds:
+      - ${self:custom.secrets.SUBNET1_ID}
+      - ${self:custom.secrets.SUBNET2_ID}
+      - ${self:custom.secrets.SUBNET3_ID}
+      - ${self:custom.secrets.SUBNET4_ID}
+      - ${self:custom.secrets.SUBNET5_ID}
+      - ${self:custom.secrets.SUBNET6_ID}
+
+functions:
+  healthCheck:
+    handler: src/controllers/peopleController.healthCheck
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+  addPeople:
+    handler: src/controllers/peopleController.create
+    events:
+      - http:
+          path: peoples
+          method: post
+          cors: true
+  getOnePeople:
+    handler: src/controllers/peopleController.getOne
+    events:
+      - http:
+          path: peoples/{id}
+          method: get
+          cors: true
+  getAllPeople:
+    handler: src/controllers/peopleController.getAll
+    events:
+      - http:
+          path: peoples
+          method: get
+          cors: true
+  editPeople:
+    handler: src/controllers/peopleController.update
+    events:
+      - http:
+          path: peoples/{id}
+          method: put
+          cors: true
+  deletePeople:
+    handler: src/controllers/peopleController.delete
+    events:
+      - http:
+          path: peoples/{id}
+          method: delete
+          cors: true
+  addFilm:
+    handler: src/controllers/filmController.addFilm
+    events:
+      - http:
+          path: films
+          method: post
+          cors: true
+  getFilmOne:
+    handler: src/controllers/filmController.getFilmOne
+    events:
+      - http:
+          path: films/{id}
+          method: get
+          cors: true
+  getFilmAll:
+    handler: src/controllers/filmController.getFilmAll
+    events:
+      - http:
+          path: films
+          method: get
+          cors: true
+  editFilm:
+    handler: src/controllers/filmController.editFilm
+    events:
+      - http:
+          path: films/{id}
+          method: put
+          cors: true
+  deleteFilm:
+    handler: src/controllers/filmController.deleteFilm
+    events:
+      - http:
+          path: films/{id}
+          method: delete
+          cors: true
+
+plugins:
+  - serverless-offline
+
