@@ -53,7 +53,7 @@ module.exports = {
   }
 };
 ```
-- Importante, Crear una base
+- Importante, Crear una base de datos
 ```sql
 CREATE DATABASE swapi;
 ```
