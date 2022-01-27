@@ -1,5 +1,7 @@
 const connectToDatabase = require('../../db')
 const traslateText = require("../traslate");
+const axios = require('axios');
+const URL_SWAPI = "https://swapi.py4e.com/api/";
 
 function HTTPError (statusCode, message) {
   const error = new Error(message)
@@ -21,6 +23,7 @@ module.exports.create = async (event) => {
   let { films, species, vehicles, starships } = data;
 
   try {
+
     const { People } = await connectToDatabase()
     /*========================================
     Convertimos a un sting cada uno de los arrays y lo asignamos.
@@ -46,23 +49,44 @@ module.exports.create = async (event) => {
 
 module.exports.getOne = async (event) => {
   try {
-    const { People } = await connectToDatabase()
-    const people = await People.findByPk(event.pathParameters.id)
-    if (!people) throw new HTTPError(404, `People with id: ${event.pathParameters.id} was not found`)
-    /*============================================
-    Convertimos el sting a un array
-    ============================================*/
-    people["films"] = people.films.split(',')
-    people["species"] = people.species.split(',')
-    people["vehicles"] = people.vehicles.split(',')
-    people["starships"] = people.starships.split(',')
 
-    const textTraslate = traslateText([people.dataValues])
+    if(event.pathParameters.id < 5){
+      try {
+        const { data } = await axios.get(`${URL_SWAPI}people/${event.pathParameters.id}`);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(textTraslate[0])
+        const textTraslate = traslateText([data])
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify(textTraslate)
+        }
+
+      } catch (error) {
+        throw new HTTPError(404, `Film with id: ${event.pathParameters.id} was not found`)
+      }
+    }else{
+
+      const { People } = await connectToDatabase()
+      const people = await People.findByPk(event.pathParameters.id)
+      if (!people) throw new HTTPError(404, `People with id: ${event.pathParameters.id} was not found`)
+      /*============================================
+      Convertimos el sting a un array
+      ============================================*/
+      people["films"] = people.films.split(',')
+      people["species"] = people.species.split(',')
+      people["vehicles"] = people.vehicles.split(',')
+      people["starships"] = people.starships.split(',')
+
+      const textTraslate = traslateText([people.dataValues])
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(textTraslate[0])
+      }
+
     }
+
+
   } catch (err) {
 
     return {
@@ -75,12 +99,16 @@ module.exports.getOne = async (event) => {
 
 module.exports.getAll = async () => {
   try {
+    let listPeoples = [];
+
+    const { data } = await axios.get(`${URL_SWAPI}people`);
+
+    data.results.map(film => {
+      listPeoples.push(film);
+    })
+
     const { People } = await connectToDatabase()
     const peoples = await People.findAll();
-
-    if (peoples.length === 0) throw new HTTPError(404, `Peoples was not found`)
-
-    let listPeoples = [];
 
     peoples.map(pp => {
       listPeoples.push({

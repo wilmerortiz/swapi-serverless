@@ -1,5 +1,7 @@
 const connectToDatabase = require('../../db')
 const traslateText = require('../traslate');
+const axios = require('axios');
+const URL_SWAPI = "https://swapi.py4e.com/api/";
 
 function HTTPError (statusCode, message) {
   const error = new Error(message)
@@ -47,24 +49,42 @@ module.exports.addFilm = async (event) => {
 
 module.exports.getFilmOne = async (event) => {
   try {
-    const { Film } = await connectToDatabase()
-    const film = await Film.findByPk(event.pathParameters.id)
-    if (!film) throw new HTTPError(404, `Film with id: ${event.pathParameters.id} was not found`)
-    /*============================================
-    Convertimos el sting a un array
-    ============================================*/
-    film["characters"] = film.characters.split(',')
-    film["planets"] = film.planets.split(',')
-    film["starships"] = film.starships.split(',')
-    film["vehicles"] = film.vehicles.split(',')
-    film["species"] = film.species.split(',')
 
-    const textTraslate = traslateText([film.dataValues])
+    if(event.pathParameters.id.length < 5){
+      try {
+        const { data } = await axios.get(`${URL_SWAPI}films/${event.pathParameters.id}`);
+        console.log('data',data)
+        const textTraslate = traslateText([data])
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(textTraslate)
+        return {
+          statusCode: 200,
+          body: JSON.stringify(textTraslate)
+        }
+
+      } catch (error) {
+        throw new HTTPError(404, `Film with id: ${event.pathParameters.id} was not found`)
+      }
+    }else{
+      const { Film } = await connectToDatabase()
+      const film = await Film.findByPk(event.pathParameters.id)
+      if (!film) throw new HTTPError(404, `Film with id: ${event.pathParameters.id} was not found`)
+      /*============================================
+      Convertimos el sting a un array
+      ============================================*/
+      film["characters"] = film.characters.split(',')
+      film["planets"] = film.planets.split(',')
+      film["starships"] = film.starships.split(',')
+      film["vehicles"] = film.vehicles.split(',')
+      film["species"] = film.species.split(',')
+
+      const textTraslate = traslateText([film.dataValues])
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(textTraslate)
+      }
     }
+
   } catch (err) {
 
     return {
@@ -77,12 +97,16 @@ module.exports.getFilmOne = async (event) => {
 
 module.exports.getFilmAll = async () => {
   try {
-    const { Film } = await connectToDatabase()
-    const films = await Film.findAll();
-
-    if (films.length === 0) throw new HTTPError(404, `Films was not found`)
-
     let listFilms = [];
+    const { data } = await axios.get(`${URL_SWAPI}films`);
+
+    data.results.map(film => {
+      listFilms.push(film);
+    })
+
+    const { Film } = await connectToDatabase()
+
+    const films = await Film.findAll();
 
     films.map(fl => {
       listFilms.push({
@@ -106,7 +130,6 @@ module.exports.getFilmAll = async () => {
     })
 
     const textTraslate = traslateText(listFilms)
-    //console.log('textTraslate', textTraslate);
 
     return {
       statusCode: 200,

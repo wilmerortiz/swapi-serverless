@@ -1,4 +1,3 @@
-const translate = require('google-translate-api');
 const i18n = require("i18n");
 
 const traslateText = (data) => {
