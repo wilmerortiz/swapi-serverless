@@ -6,7 +6,7 @@ En este ejemplo podemos ejecutar localmente Serveless Framework, usando <a href=
 npm install
 
 # Requerimientos
-Crear un archivo llamdado secrets.json , otro db.config.js.
+Crear dos archivos en la raiz del proyecto llamdado secrets.json , otro db.config.js.
  - secrets.json
 ```json
 {
