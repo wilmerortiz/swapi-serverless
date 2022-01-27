@@ -4,7 +4,6 @@ node_modules
 serverless - copia.yml
 secrets.json
 db.config.js
-db.js
 .idea
 .gitignore
 .npmignore
