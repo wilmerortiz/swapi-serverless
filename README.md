@@ -10,7 +10,7 @@ Crear dos archivos en la raiz del proyecto llamado secrets.json , otro db.config
  - secrets.json
 ```json
 {
-  "DB_NAME": "",
+  "DB_NAME": "swapi",
   "DB_USER": "",
   "DB_PASSWORD": "",
   "DB_HOST": "127.0.0.1",
@@ -30,7 +30,7 @@ Crear dos archivos en la raiz del proyecto llamado secrets.json , otro db.config
  - db.config.js
 ```javascript
 module.exports = {
-  DB_NAME: "",
+  DB_NAME: "swapi",
   DB_USER: "",
   DB_PASSWORD: "",
   DB_HOST: "127.0.0.1",
